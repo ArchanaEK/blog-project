@@ -3,34 +3,43 @@ const Article=require('./../models/article')
 const router=express.Router();
 
 router.get('/new',(req,res)=>{
-    res.render('new', {article: new Article()})
+    res.render('new', {articlew: new Article()})
 })
 
-router.get('/:id', (req,res)=>{
+router.get('/:slug', async (req,res)=>{
 
-  res.send(req.params.id)
-
-//   const article=await Article.findById(req.params.id)
-//   if(article==null) res.redirect('/')
-//  res.render('show',{article:article})
+  const article=await Article.find({slug:req.params.slug})
+  console.log("show button")
+  console.log(article)
+  if(article==null) res.redirect('/')
+ res.render('show',{article:article})
 
 })
 
 router.post('/',async (req,res)=>{
+  
 
+  // console.log("hgsdvjfhb", req.body.title)
     let article=new Article({
        title: req.body.title,
        description:req.body.description,
        markdown:req.body.markdown
     })
-  try{
-   article= await article.save()
 
-   console.log(article.id)
-    res.redirect(`/articles/${article.id}`)
+  try{
+
+    // console.log(article)
+   await article.save().then(()=>console.log("mewo"))
+
+   console.log(article)
+
+   console.log(article.slug)
+    res.redirect(`/articles/${article.slug}`)
 
   } catch(e){
+    console.log("error")
       console.log(e)
+      console.log(article)
     res.render('new',{article:article})
 
   }

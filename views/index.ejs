@@ -22,10 +22,11 @@
                 <div class="card-body">
                     <h4 class="card-title"> <%= text.title%></h4>
                     <div class="card-subtitl text-muted mb-2">
-                        <% text.createArticle.toLocaleDateString() %>
+                        <%= text.createdAt.toLocaleDateString()  %>
                     </div>
 
-                    <div class="card-text mb-2"> <%=text.description%></div>
+                    <div class="card-text mb-2"><%=text.markdown%></div>
+                    <a href="articles/ <%= text.slug %>" class="btn btn-primary">Read More</a>
                 </div>
                 
             </div>

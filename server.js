@@ -1,41 +1,37 @@
 console.log("started")
 
-const mongoose=require('mongoose')
+const mongoose = require('mongoose')
 
+const Article= require('./models/article')
 
-const express=require('express');
-const app=express();
-
-mongoose.connect('mongodb://localhost/blog', {useNewUrlParser:true})
-
-const arctcleRouter=require('./routs/arcticles');
+const express = require('express');
+const app = express();
 
 
 
-app.set('view engine','ejs')
+mongoose.connect('mongodb://localhost/blog', { useNewUrlParser: true,})
+    .then(() => { console.log("connection successfull") })
+    .catch((e) => {
+        console.log("error........")
+        console.log(e);
+    })
 
-app.use(express.urlencoded({extended:false}))
+const arctcleRouter = require('./routs/arcticles');
 
 
 
+app.set('view engine', 'ejs')
 
-app.get('/',(req,res)=>{
+app.use(express.urlencoded({ extended: false }))
 
-     const articles=[{
-        title:'test Article2',
-        createArticle: new Date(),
-        description:'test description here article1'
 
-     },
-    {
-        title:'test Article2',
-        createArticle:new Date(),
-        description:'test description here of article2'
-    }
-    ]
-    res.render('index',{text:articles})
+
+app.get('/', async (req, res) => {
+
+    const articles = await Article.find().sort({createdAt:'desc'});
+    res.render('index', { text: articles })
 })
 
-app.use('/articles',arctcleRouter);
+app.use('/articles', arctcleRouter);
 
-app.listen(50000);
+app.listen(10000);
